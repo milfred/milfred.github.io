@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <link href='https://fonts.googleapis.com/css?family=Raleway:700,600,800,400|Lato:400,700,700italic,900,900italic|PT+Mono' rel='stylesheet' type='text/css'>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>The Differences Between Arrays and Hashes in Ruby</title>
+  <meta name="description" content="In Ruby, an array and a hash are similar in the sense that they are both containers for a group of objects that act like variables. In an array, each object ...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://milfred.github.io/ruby/2016/03/06/ruby-arrays-and-hashes.html">
+  <link rel="alternate" type="application/rss+xml" title="Your awesome title" href="http://milfred.github.io/feed.xml">
+</head>
+
+  <body>
+    <div class="container">
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Your awesome title</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          <!-- Compare the page title to the URL -->
+          
+          <a class="page-link" href="/about/">about</a>
+          
+        
+          <!-- Compare the page title to the URL -->
+          
+          <a class="page-link" href="/blog/">blog</a>
+          
+        
+          <!-- Compare the page title to the URL -->
+          
+        
+          <!-- Compare the page title to the URL -->
+          
+        
+          <!-- Compare the page title to the URL -->
+          
+          <a class="page-link" href="/projects/">projects</a>
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">The Differences Between Arrays and Hashes in Ruby</h1>
+    <p class-"sub-title"></p>
+    <p class="post-meta"><time datetime="2016-03-06T00:00:00-06:00" itemprop="datePublished">Mar 6, 2016</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Jason Milfred</span></span> • categories: <span>ruby</span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>In Ruby, an array and a hash are similar in the sense that they are both containers for a group of objects that act like variables. In an array, each object in the array is indexed with an integer starting with zero. A hash, on the other hand, uses a key/value pair to access the index. The key can be any type of object (string, integer, etc.).</p>
+
+<h2 id="arrays">Arrays</h2>
+
+<p>Values in an array are comma separated and wrapped in brackets.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">spinal_tap</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"David St. Hubbins"</span><span class="p">,</span> <span class="s2">"Nigel Tufnel"</span><span class="p">,</span> <span class="s2">"Derek Smalls"</span><span class="p">]</span></code></pre></figure>
+
+<p>So “David St. Hubbins” could be accessed by calling:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">spinal_tap</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#=&gt; "David St. Hubbins"</span></code></pre></figure>
+
+<h2 id="hashes">Hashes</h2>
+
+<p>Key/value pairs in a hash can be separated with two different syntaxes. <code class="highlighter-rouge">=&gt;</code> (referred to as ‘hash rocket’), or <code class="highlighter-rouge">:</code>. If you use a colon, the key will be a <code class="highlighter-rouge">symbol</code>. For more information about symbols and how they differ from strings, <a href="http://ruby-doc.org/core-2.3.0/Symbol.html">look here</a>.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">spinal_tap</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="ss">david: </span><span class="p">{</span>
+    <span class="ss">name: </span><span class="s2">"David St. Hubbins"</span><span class="p">,</span>
+    <span class="ss">role: </span><span class="p">[</span><span class="s2">"lead singer"</span><span class="p">,</span> <span class="s2">"rhythm guitar"</span><span class="p">]</span> <span class="p">},</span>
+  <span class="ss">nigel: </span><span class="p">{</span>
+    <span class="ss">name: </span><span class="s2">"Nigel Tufnel"</span><span class="p">,</span>
+    <span class="ss">role: </span><span class="s2">"lead_guitar"</span> <span class="p">},</span>
+  <span class="ss">derek: </span><span class="p">{</span>
+    <span class="ss">name: </span><span class="s2">"Derek Smalls"</span><span class="p">,</span>
+    <span class="ss">role: </span><span class="s2">"bass"</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Values can be accessed by calling the key assigned to it. The example above is a multi-dimensional hash or, as I once heard it referred to, a “hashy hash.” Here, “David St. Hubbins” can be accessed by calling:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">spinal_tap</span><span class="p">[</span><span class="ss">:david</span><span class="p">][</span><span class="ss">:name</span><span class="p">]</span> <span class="c1">#=&gt; "David St. Hubbins"</span></code></pre></figure>
+
+<p>If we want to see what David’s role is in the band we can say:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">puts</span> <span class="n">spinal_tap</span><span class="p">[</span><span class="ss">:david</span><span class="p">][</span><span class="ss">:role</span><span class="p">]</span> <span class="c1">#=&gt;</span>
+<span class="c1"># lead singer</span>
+<span class="c1"># rhythm guitar</span></code></pre></figure>
+
+
+  </div>
+
+</article>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <!-- <h2 class="footer-heading">Your awesome title</h2> -->
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <!-- <li>Your awesome title</li> -->
+          <li><a href="mailto:your-email@domain.com">your-email@domain.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </div>
+  </body>
+
+</html>

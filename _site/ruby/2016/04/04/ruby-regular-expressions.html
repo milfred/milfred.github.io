@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <link href='https://fonts.googleapis.com/css?family=Raleway:700,600,800,400|Lato:400,700,700italic,900,900italic|PT+Mono' rel='stylesheet' type='text/css'>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Ruby: Regular Expressions and MatchData Basics</title>
+  <meta name="description" content="I’ve used regular expressions before in SQL and Google Analytics, but there’s something intimidating about the way they look in Ruby sometimes that has stopp...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://milfred.github.io/ruby/2016/04/04/ruby-regular-expressions.html">
+  <link rel="alternate" type="application/rss+xml" title="Your awesome title" href="http://milfred.github.io/feed.xml">
+</head>
+
+  <body>
+    <div class="container">
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Your awesome title</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          <!-- Compare the page title to the URL -->
+          
+          <a class="page-link" href="/about/">about</a>
+          
+        
+          <!-- Compare the page title to the URL -->
+          
+          <a class="page-link" href="/blog/">blog</a>
+          
+        
+          <!-- Compare the page title to the URL -->
+          
+        
+          <!-- Compare the page title to the URL -->
+          
+        
+          <!-- Compare the page title to the URL -->
+          
+          <a class="page-link" href="/projects/">projects</a>
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Ruby: Regular Expressions and MatchData Basics</h1>
+    <p class-"sub-title">An Essential Tool for the Rubyist</p>
+    <p class="post-meta"><time datetime="2016-04-04T00:00:00-05:00" itemprop="datePublished">Apr 4, 2016</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Jason Milfred</span></span> • categories: <span>ruby</span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>I’ve used regular expressions before in SQL and Google Analytics, but there’s something intimidating about the way they look in Ruby sometimes that has stopped me from delving into them so far. For instance =&gt; <code class="highlighter-rouge">(s =~ /&lt;0(x|X)(\d|[a-f]|[A-F])+&gt;/)</code>. What kind of insanity is that? It honestly looks like someone just mashed the keyboard. Yet, I know how helpful understanding regular expressions can be, so I decided I had to do some research and get to know them better.</p>
+
+<p>Let’s start off with some basics. A regular expression is used for pattern matching. With them you can test a string to see if it contains a pattern, you can extract characters from a string, and you can change a string.</p>
+
+<p>Take this string, for example:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">string</span> <span class="o">=</span> <span class="s2">"Ahh, a bear in his natural habitat...a Studebaker."</span></code></pre></figure>
+
+<p>To check if the word “Studebaker” is in the string, we could do it like this:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">string</span> <span class="o">=~</span> <span class="sr">/Studebaker/</span> <span class="c1">#=&gt; 39</span></code></pre></figure>
+
+<p>Wait. Why does it return “39?” The =~ operator returns the number that the match starts on. If we want, we can create a MatchData object by calling the match method and storing the results to a variable.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">match_studebaker</span> <span class="o">=</span> <span class="sr">/Studebaker/</span><span class="p">.</span><span class="nf">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="c1">#=&gt; &lt;MatchData "Studebaker"&gt;</span></code></pre></figure>
+
+<p>Now we can call to_s on match_studebaker.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">match_studebaker</span><span class="p">.</span><span class="nf">to_s</span> <span class="c1">#=&gt; "Studebaker"</span></code></pre></figure>
+
+<p>Since we might not know if the word is capitalized or not we could try something like this:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">match</span> <span class="o">=</span> <span class="sr">/studebaker/</span><span class="p">.</span><span class="nf">match</span><span class="p">(</span><span class="n">string</span><span class="p">.</span><span class="nf">downcase</span><span class="p">)</span> <span class="c1">#=&gt; &lt;MatchData "studebaker"&gt;</span></code></pre></figure>
+
+<p>And it works. However, the string in the MatchData object now has a lowercase “s.” We could alter our regular expression a bit to accomplish the same thing.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">match</span> <span class="o">=</span> <span class="sr">/[sS]tudebaker/</span><span class="p">.</span><span class="nf">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="c1">#=&gt; &lt;MatchData "Studebaker"&gt;</span></code></pre></figure>
+
+<p>With this method we have the added benefit of not altering the original case of the matched pattern as well. There are a number of other useful methods in the MatchData class. If you’d like to learn more, you can <a href="http://ruby-doc.org/core-1.9.3/MatchData.html">view them here</a>.</p>
+
+
+  </div>
+
+</article>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <!-- <h2 class="footer-heading">Your awesome title</h2> -->
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <!-- <li>Your awesome title</li> -->
+          <li><a href="mailto:your-email@domain.com">your-email@domain.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </div>
+  </body>
+
+</html>
