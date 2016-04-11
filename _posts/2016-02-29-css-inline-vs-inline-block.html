@@ -1,0 +1,27 @@
+---
+title: "CSS Display Property: Using Inline vs. Inline-Block"
+subtitle: "Understanding the Difference Between Inline and Inline-Block"
+date: 2016-02-29
+categories: css
+---
+
+<section>
+  <h2>Inline and Block</h2>
+  <p>Inline and inline-block are values you can apply to an HTML element using the CSS display property. To understand the difference between the two you will need to first have a basic understanding of The inline and block values. Inline and block are the standard values for essentailly all HTML elements.</p>
+  <p>A block-level element is typically a container element. Some examples of block level elements are: <strong>div</strong>, <strong>section</strong>, <strong>main</strong>, and <strong>p</strong>. Block-level elements occupy the entire space of their parent elements by default and span the entire width of the page. Elements before and after a block-level element will sit above and below it in the page layout.</p>
+
+  <p>I'm a "p" (or paragraph) element. I'm a block-level element.</p>
+
+  <section><p>And I'm a "section" element. I'm a block-level element too. We can't sit next to each other. The teacher thinks we're a bad influence on each other.</p></section>
+
+  <p>An inline-level element only occupies the space of the content inside of it and it flows "inline" with text content. Some examples of inline elements are: <strong>strong</strong>, <strong>span</strong>, and <strong>a</strong>. You can't speficy a height and width in CSS for inline-level elments.</p>
+
+  <span>I'm a "span" element. I'm inline.</span>
+  <a href="#" alt="Some Alt Text">I'm an "a" (or anchor) element. I'm inline too and well behaved enough to sit next to my buddy span.</a>
+
+  <h2>Inline-Block</h2>
+  <p>Inline-block is basically a combination of inline and block. They are basically block-level elements, but you can specify a height and width in CSS for an element displayed with inline-block. They will also allow other elements to sit to the right and left without pushing them to the next row up or down.</p>
+
+  <div class="inline-block">I'm a paragraph elment who's been set to display inline-block.</div>
+  <div class="inline-block">I'm another paragraph set to inline-block. Stop touching me!</div>
+</section>

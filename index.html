@@ -3,8 +3,19 @@ layout: default
 ---
 
 <div class="home">
+  <!-- Begin About Me -->
 
-  <h1 class="page-heading">Posts</h1>
+  <h1 class="page-heading"><span>Hey!</span> I'm Jason Milfred</h1>
+
+  <p>I'm a web developer who also has over six years of experience as an ecommerce merchandiser. Offering a unique blend of creativity, analytical expertise, knowledge of online merchandising best practices, and full stack dev skills. Hit the link below to learn more about how I can help your business. <a href="/about/">learn more &#187;</a></p>
+
+ <!-- End About Me -->
+
+ <!-- Begin Blog Posts -->
+
+ <h2>Recent Blog Posts</h2>
+
+ <p>Here are the latest posts from my blog. <a href="/blog/">view all blog posts &#187;</a></p>
 
   <ul class="post-list">
     {% for post in site.posts %}
@@ -14,10 +25,11 @@ layout: default
         <h2>
           <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
         </h2>
+        {{ post.excerpt }}
       </li>
     {% endfor %}
   </ul>
 
-  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
+ <!-- End Blog Posts -->
 
 </div>
