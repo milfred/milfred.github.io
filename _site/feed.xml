@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Your awesome title</title>
-    <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
-</description>
+    <title>jason_milfred(design, develop)</title>
+    <description></description>
     <link>http://milfred.github.io/</link>
     <atom:link href="http://milfred.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 11 Apr 2016 00:24:42 -0500</pubDate>
-    <lastBuildDate>Mon, 11 Apr 2016 00:24:42 -0500</lastBuildDate>
+    <pubDate>Mon, 11 Apr 2016 19:00:51 -0500</pubDate>
+    <lastBuildDate>Mon, 11 Apr 2016 19:00:51 -0500</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
     
       <item>
@@ -209,6 +208,7 @@
       <item>
         <title>CSS Display Property: Using Inline vs. Inline-Block</title>
         <description>&lt;section&gt;
+  &lt;img src=&quot;/imgs/css-logo_125x113.png&quot;&gt;
   &lt;h2&gt;Inline and Block&lt;/h2&gt;
   &lt;p&gt;Inline and inline-block are values you can apply to an HTML element using the CSS display property. To understand the difference between the two you will need to first have a basic understanding of The inline and block values. Inline and block are the standard values for essentailly all HTML elements.&lt;/p&gt;
   &lt;p&gt;A block-level element is typically a container element. Some examples of block level elements are: &lt;strong&gt;div&lt;/strong&gt;, &lt;strong&gt;section&lt;/strong&gt;, &lt;strong&gt;main&lt;/strong&gt;, and &lt;strong&gt;p&lt;/strong&gt;. Block-level elements occupy the entire space of their parent elements by default and span the entire width of the page. Elements before and after a block-level element will sit above and below it in the page layout.&lt;/p&gt;
