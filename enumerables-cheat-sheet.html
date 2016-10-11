@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Droid+Serif:400,700,700italic,400italic|Open+Sans:400,700|Inconsolata' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="css/cheat-sheet.css">
+  <title>Ruby Enumerables Cheat Sheet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script type="text/javascript">
+    if($(window).width() < 600) {
+      $(function () {
+        //  Accordion Panels
+        $(".accordion div").hide();
+        $(".accordion h3").click(function () {
+          $(this).next(".pane").slideToggle("fast").siblings(".pane:visible").slideUp("fast");
+          $(this).toggleClass("current");
+          $(this).siblings("h3").removeClass("current");
+        });
+      });
+    }
+  </script>
+  <script>
+    $(function() {
+      $('a[href*="#"]:not([href="#"])').click(function() {
+        if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+          var target = $(this.hash);
+          target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+          if (target.length) {
+            $('html, body').animate({
+              scrollTop: target.offset().top
+            }, 500);
+            return false;
+          }
+        }
+      });
+    });
+    </script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 800) {
+                $('.scrollup').fadeIn();
+            } else {
+                $('.scrollup').fadeOut();
+            }
+        });
+
+        $('.scrollup').click(function () {
+            $("html, body").animate({
+                scrollTop: 0
+            }, 600);
+            return false;
+        });
+    });
+    </script>
+</head>
+<body>
+  <div id="wrapper">
+    <header>
+      <h1><span class="bigger fancier">Ruby:</span> Enumerable Cheat Sheet</h1>
+      <img class="header-image" src="../imgs/ruby-logo_125x113.png" alt="Ruby Icon">
+    </header>
+
+    <main>
+      <div id="table">
+      <nav id="index" class="hide-mobile">
+        <h2>Method Index</h2></a>
+        <ol>
+          <li><a href="#all">all?</a></li>
+          <li><a href="#any">any?</a></li>
+          <li><a href="#chunk">chunk</a></li>
+          <li><a href="#chunk-while">chunk_while</a></li>
+          <li><a href="#collect">collect</a></li>
+          <li><a href="#collect-concat">collect_concat</a></li>
+          <li><a href="#count">count</a></li>
+          <li><a href="#cycle">cycle</a></li>
+          <li><a href="#detect">detect</a></li>
+          <li><a href="#drop">drop</a></li>
+          <li><a href="#drop-while">drop_while</a></li>
+          <li><a href="#each-cons">each_cons</a></li>
+          <li><a href="#each-entry">each_entry</a></li>
+          <li><a href="#each-slice">each_slice</a></li>
+          <li><a href="#each-with-index">each_with_index</a></li>
+          <li><a href="#each-with-object">each_with_object</a></li>
+          <li><a href="#entries">entries</a></li>
+          <li><a href="#find">find</a></li>
+          <li><a href="#find-all">find_all</a></li>
+          <li><a href="#find-index">find_index</a></li>
+          <li><a href="#first">first</a></li>
+          <li><a href="#flat-map">flat_map</a></li>
+          <li><a href="#grep">grep</a></li>
+          <li><a href="#grep-v">grep_v</a></li>
+          <li><a href="#group-by">group_by</a></li>
+          <li><a href="#include">include?</a></li>
+          <li><a href="#inject">inject</a></li>
+          <li><a href="#lazy">lazy</a></li>
+          <li><a href="#map">map</a></li>
+          <li><a href="#max">max</a></li>
+          <li><a href="#max-by">max_by</a></li>
+          <li><a href="#member">member?</a></li>
+          <li><a href="#min">min</a></li>
+          <li><a href="#min-by">min_by</a></li>
+          <li><a href="#minmax">minmax</a></li>
+          <li><a href="#minmax-by">minmax_by</a></li>
+          <li><a href="#none">none?</a></li>
+          <li><a href="#one">one?</a></li>
+          <li><a href="#partition">partition</a></li>
+          <li><a href="#reduce">reduce</a></li>
+          <li><a href="#reject">reject</a></li>
+          <li><a href="#reverse-each">reverse_each</a></li>
+          <li><a href="#select">select</a></li>
+          <li><a href="#slice-after">slice_after</a></li>
+          <li><a href="#slice-before">slice_before</a></li>
+          <li><a href="#slice-when">slice_when</a></li>
+          <li><a href="#sort">sort</a></li>
+          <li><a href="#sort-by">sort_by</a></li>
+          <li><a href="#take">take</a></li>
+          <li><a href="#take-while">take_while</a></li>
+          <li><a href="#to-a">to_a</a></li>
+          <li><a href="#to-h">to_h</a></li>
+          <li><a href="#zip">zip</a></li>
+        </ol>
+      </nav>
+
+      <section id="enumerable" class="accordion">
+
+        <section class="hide-mobile">
+        <h2>Syntax Quick Reference</h2>
+          <code class="syntax">all? { |obj| block } #=> true or false</code>
+          <code class="syntax">any? { |obj| block } #=> true or false</code>
+          <code class="syntax">chunk { |elt| ... } #=> an_enumerator</code>
+          <code class="syntax">chunk_while { |elt_before, elt_after| bool } #=> an_enumerator</code>
+          <span class="left-bracket"><code class="syntax">count #=> int</code></span>
+          <code class="syntax">count(item) #=> int</code>
+          <span class="right-bracket"><code class="syntax">count { |obj| block } #=> int</code></span>
+          <code class="syntax">cycle(n=nil) { |obj| block } #=> nil</code>
+          <code class="syntax">detect { |obj| block } #=> obj or nil</code>
+          <code class="syntax">drop(n) #=> array</code>
+          <code class="syntax">drop_while { |arr| block } #=> array</code>
+          <code class="syntax">each_cons(n) { |obj| block } #=> nil</code>
+          <code class="syntax">each_entry {|obj| block} #=> enum</code>
+          <code class="syntax">each_slice(n) { |obj| block } #=> nil</code>
+          <code class="syntax">each_with_index(*args) { |obj, i| block } #=> enum</code>
+          <code class="syntax">each_with_object(obj) { |(*args), memo_obj| ... } #=> obj</code>
+          <code class="syntax">entries(*args) #=> array</code>
+          <code class="syntax">find_index(value) #=> int or nil</code>
+          <code class="syntax">find_index { |obj| block } #=> int or nil</code>
+          <code class="syntax">first #=> obj or nil</code>
+          <code class="syntax">first(n) #=> an_array</code>
+          <code class="syntax">flat_map { |obj| block } #=> array</code>
+          <code class="syntax">grep(pattern) #=> array</code>
+          <code class="syntax">grep(pattern) { |obj| block } #=> array</code>
+          <code class="syntax">grep_v(pattern) #=> array</code>
+          <code class="syntax">grep_v(pattern) { |obj| block } #=> array</code>
+          <code class="syntax">group_by { |obj| block } #=> a_hash</code>
+          <code class="syntax">include?(obj) #=> true or false</code>
+          <code class="syntax">inject(initial, sym) #=> obj</code>
+          <code class="syntax">inject(sym) #=> obj</code>
+          <code class="syntax">inject(initial) { |memo, obj| block } #=> obj</code>
+          <code class="syntax">inject { |memo, obj| block } #=> obj</code>
+          <code class="syntax">lazy #=> lazy_enumerator</code>
+          <code class="syntax">map { |obj| block } #=> array</code>
+          <code class="syntax">max #=> obj</code>
+          <code class="syntax">max { |a, b| block } #=> obj</code>
+          <code class="syntax">max(n) #=> obj</code>
+          <code class="syntax">max(n) { |a, b| block } #=> obj</code>
+          <code class="syntax">max_by { |obj| block } #=> obj</code>
+          <code class="syntax">max_by(n) { |obj| block } #=> obj</code>
+          <code class="syntax">min #=> obj</code>
+          <code class="syntax">min { |a, b| block } #=> obj</code>
+          <code class="syntax">min(n) #=> array</code>
+          <code class="syntax">min(n) { |a, b| block } #=> array</code>
+          <code class="syntax">min_by { |obj| block } #=> obj</code>
+          <code class="syntax">min_by(n) { |obj| block } #=> array</code>
+          <code class="syntax">minmax #=> [min, max] click to toggle source</code>
+          <code class="syntax">minmax { |a, b| block } #=> [min, max]</code>
+          <code class="syntax">minmax_by { |obj| block } #=> [min, max]</code>
+          <code class="syntax">none? { |obj| block } #=> true or false</code>
+          <code class="syntax">one? { |obj| block } #=> true or false</code>
+          <code class="syntax">partition { |obj| block } #=> [true_array, false_array]</code>
+          <code class="syntax">reduce(initial, sym) #=> obj</code>
+          <code class="syntax">reduce(sym) #=> obj</code>
+          <code class="syntax">reduce(initial) { |memo, obj| block } #=> obj</code>
+          <code class="syntax">reduce { |memo, obj| block } #=> obj</code>
+          <code class="syntax">reject { |obj| block } #=> array</code>
+          <code class="syntax">reverse_each(*args) { |item| block } #=> enum</code>
+          <code class="syntax">select { |obj| block } #=> array</code>
+          <code class="syntax">slice_after(pattern) #=> an_enumerator</code>
+          <code class="syntax">slice_after { |elt| bool } #=> an_enumerator</code>
+          <code class="syntax">slice_before(pattern) #=> an_enumerator</code>
+          <code class="syntax">slice_before { |elt| bool } #=> an_enumerator</code>
+          <code class="syntax">slice_when {|elt_before, elt_after| bool } #=> an_enumerator</code>
+          <code class="syntax">sort #=> array</code>
+          <code class="syntax">sort { |a, b| block } #=> array</code>
+          <code class="syntax">sort_by { |obj| block } #=> array</code>
+          <code class="syntax">take(n) #=> array</code>
+          <code class="syntax">take_while { |arr| block } #=> array</code>
+          <code class="syntax">to_a #=> array</code>
+          <code class="syntax">to_h(*args) #=> hash</code>
+          <code class="syntax">zip(arg, ...) #=> an_array_of_array</code>
+          <code class="syntax">zip(arg, ...) { |arr| block } #=> nil</code>
+        </section>
+
+        <h2>Instance Methods</h2>
+        <h3 id="all">all?</h3>
+        <div class="pane">
+          <code class="syntax">all? { |obj| block } #=> true or false</code>
+          <p>Passes each element of the collection to the block. It returns true if the block returns true for all of the elements in the collection.</p>
+          <pre class="example"><code>[1, 2, 3, 4].all? { |i| i &#60;= 3 }
+<span class="comment">#=> false</span>
+[1, 2, 3, 4].all? { |i| i &#60;= 4 }
+<span class="comment">#=> true</span></code></pre>
+        </div>
+
+        <h3 id="any">any?</h3>
+        <div class="pane">
+          <code class="syntax">any? { |obj| block } #=> true or false</code>
+          <p>Similar to the <strong>all?</strong> method. <strong>Any?</strong> passes each element to the block. The difference is that it returns true if the block returns true for any of the elementsin the collection.</p>
+          <pre class="example"><code>[1, 2, 3, 4].any? { |i| i &#60;= 3 } #=> true
+[1, 2, 3, 4].all? { |i| i > 4 }
+<span class="comment">#=> false</span></code></pre>
+        </div>
+
+        <h3 id="chunk">chunk</h3>
+        <div class="pane">
+          <code class="syntax">chunk { |elt| ... } #=> an_enumerator</code>
+          <p><span class="highlight">From ruby-doc.org:</span> Enumerates over the items, chunking them together based on the return value of the block. Consecutive elements which return the same block value are chunked together. For example, consecutive even numbers and odd numbers can be chunked as follows.</p>
+          <pre class="example"><code>[3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5].chunk { |n|
+  n.even?
+}.each { |even, ary|
+  p [even, ary]
+}
+<span class="comment">#=> [false, [3, 1]]
+# [true, [4]]
+# [false, [1, 5, 9]]
+# [true, [2, 6]]
+# [false, [5, 3, 5]]</span></code></pre>
+        </div>
+
+        <h3 id="chunk-while">chunk_while</h3>
+        <div class="pane">
+          <code class="syntax">chunk_while { |elt_before, elt_after| bool } #=> an_enumerator</code>
+          <p><span class="highlight">From ruby-doc.org:</span> Creates an enumerator for each chunked elements. The beginnings of chunks are defined by the block.</p>
+          <p>This method split each chunk using adjacent elements, elt_before and elt_after, in the receiver enumerator. This method split chunks between elt_before and elt_after where the block returns false.</p>
+          <p>The block is called the length of the receiver enumerator minus one.</p>
+          <p>The result enumerator yields the chunked elements as an array. So each method can be called as follows:</p>
+          <code class="syntax">enum.chunk_while { |elt_before, elt_after| bool }.each { |ary| ... }</code>
+          <p>Other methods of the Enumerator class and Enumerable module, such as to_a, map, etc., are also usable.</p>
+          <p>For example, one-by-one increasing subsequence can be chunked as follows:</p>
+          <pre class="example"><code>a = [1,2,4,9,10,11,12,15,16,19,20,21]
+b = a.chunk_while {|i, j| i+1 == j }
+p b.to_a <span class="comment">#=> [[1, 2], [4], [9, 10, 11, 12], [15, 16], [19, 20, 21]]</span>
+c = b.map {|a| a.length &#60; 3 ? a : "#{a.first}-#{a.last}" }
+p c <span class="comment">#=> [[1, 2], [4], "9-12", [15, 16], "19-21"]</span>
+d = c.join(",")
+p d <span class="comment">#=> "1,2,4,9-12,15,16,19-21"</span></code></pre>
+        </div>
+
+        <h3 id="collect">collect</h3>
+        <div class="pane">
+          <p><strong>Collect</strong> performs the same operation as <strong>map</strong>. <a href="#map">view now</a></p>
+        </div>
+
+        <h3 id="collect-concat">collect_concat</h3>
+        <div class="pane">
+          <p><strong>Collect_concat</strong> performs the same operation as <strong>flat_map</strong>. <a href="#flat-map">view now</a></p>
+        </div>
+
+        <h3 id="count">count</h3>
+        <div class="pane">
+          <code class="syntax">count #=> int</code>
+          <code class="syntax">count(item) #=> int</code>
+          <code class="syntax">count { |obj| block } #=> int</code>
+          <p><strong>Count</strong> is not the same as <strong>length</strong> and <strong>size</strong>. It can perform the same operation if no argument is provided, but the <strong>length</strong> method is faster in this case. When provided an argument, <strong>count</strong> will return the number of items in the collection that return true when passed to the block.</p>
+          <pre class="example"><code>array = [2, 5, 7, 8, 12]
+array.count { |x| x % 2 == 0 }
+<span class="comment">#=> 3</span></code></pre>
+        </div>
+
+        <h3 id="cycle">cycle</h3>
+        <div class="pane">
+          <code class="syntax">cycle(n=nil) { |obj| block } #=> nil</code>
+          <p>Prints the results of passing each element in the collection to the block (n) times and returns nil. For a more in depth look at cycle and an interesting use of it's ability to cycle forever check this out. <a href="../blog/enumerable-methods.html">read more</a></p>
+          <pre class="example"><code>(1..5).cycle(2) { |i| print i }
+<span class="comment"># prints 1, 2, 3, 4, 5, 1, 2, 3, 4, 5</span></code></pre>
+        </div>
+
+        <h3 id="detect">detect</h3>
+        <div class="pane">
+          <code class="syntax">detect { |obj| block } #=> obj or nil</code>
+          <p>Passes each item in the collection to the block and returns the first one that returns true. If no match is found, it returns nil.</p>
+          <pre class="example"><code>(1..10).detect { |i| i > 4 }
+<span class="comment">#=> 5</span></code></pre>
+        </div>
+
+        <h3 id="drop">drop</h3>
+        <div class="pane">
+          <code class="syntax">drop(n) #=> array</code>
+          <p>Drops the first (n) elements from the collection and returns the rest in an array.</p>
+          <pre class="example"><code>hash = { "one" => 1, "two" => 2, "three" => 3, "four" => 4 }
+hash.drop(2)
+<span class="comment">#=> [["three", 3], ["four", 4]]</span></code></pre>
+        </div>
+
+        <h3 id="drop-while">drop_while</h3>
+        <div class="pane">
+          <code class="syntax">drop_while { |arr| block } #=> array</code>
+          <p>Drops the elements starting at the beginning of the collection up to, but not including, the first element that the block returns false or nil for. The remaining elements are returned in an array.</p>
+          <pre class="example"><code>hash = { "one" => 1, "two" => 2, "three" => 3, "four" => 4 }
+hash.drop_while { |key, val| key.length &#60;= 3 }
+<span class="comment">#=> [["three", 3], ["four", 4]]</span></code></pre>
+        </div>
+
+        <h3 id="each-cons">each_cons</h3>
+        <div class="pane">
+          <code class="syntax">each_cons(n) { |obj| block } #=> nil</code>
+          <p>Iterates over a collection just like <strong>each</strong>, but the argument (n) allows you to specify a number of objects to iterate starting at index 0.</p>
+          <pre class="example"><code>array = [1, 2, 3, 4, 5, 6]
+array.each_cons(4) { |i| i % 2 == 0 }
+<span class="comment"># outputs [2, 4]</span></code></pre>
+        </div>
+
+        <h3 id="each-entry">each_entry</h3>
+        <div class="pane">
+          <code class="syntax">each_entry {|obj| block} #=> enum</code>
+          <p><span class="highlight">From ruby-doc.org:</span> Calls block once for each element in self, passing that element as a parameter, converting multiple values from yield to an array. If no block is given, an enumerator is returned instead.</p>
+          <pre class="example"><code>class Foo
+  include Enumerable
+  def each
+    yield 1
+    yield 1, 2
+    yield
+  end
+end
+Foo.new.each_entry{ |o| p o }
+
+<span class="comment"># Produces
+1
+[1, 2]
+nil</span></code></pre>
+        </div>
+
+        <h3 id="each-slice">each_slice</h3>
+        <div class="pane">
+          <code class="syntax">each_slice(n) { |obj| block } #=> nil</code>
+          <p>Iterates the given block for each slice of (n) elements.</p>
+          <pre class="example"><code>couples = ["Jane", "Tarzan", "Mr. Carson", Mrs. Hughes", "Baby", "Johnny", "Harry", "Sally", "Scarlett", "Rhett"]
+couples.each_slice(2) { |name| print name }
+<span class="comment"># Output
+["Jane", "Tarzan"]["Mr. Carson", "Mrs. Hughes"]["Baby", "Johnny"]["Harry", "Sally"]["Scarlett", "Rhett"]</span></code></pre>
+        </div>
+
+        <h3 id="each-with-index">each_with_index</h3>
+        <div class="pane">
+          <code class="syntax">each_with_index(*args) { |obj, i| block } #=> enum</code>
+          <p>This method takes two arguments. One for the item and one for the index. Each element and its index are passed to the block and </p>
+          <pre class="example"><code>racers = ["Ellen", "Joe", "Mary", "Anna", "William"]
+racers.each_with_index do |i, index|
+  if index == racers.length - 1
+    print i + " is number " + (index + 1).to_s
+  else
+    print i + " is number " + (index + 1).to_s + ", "
+  end
+end
+<span class="comment"># Prints
+Ellen is number 1, Joe is number 2, Mary is number 3, Anna is number 4, William is number 5</span></code></pre>
+        </div>
+
+        <h3 id="each-with-object">each_with_object</h3>
+        <div class="pane">
+          <code class="syntax">each_with_object(obj) { |(*args), memo_obj| ... } #=> obj</code>
+          <p><span class="highlight">From ruby-doc.org:</span> Iterates the given block for each element with an arbitrary object given, and returns the initially given object. If no block is given, returns an enumerator.</p>
+          <pre class="example"><code>evens = (1..10).each_with_object([]) { |i, a| a &#60;&#60; i*2 }
+<span class="comment">#=> [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]</span></code></pre>
+        </div>
+
+        <h3 id="entries">entries</h3>
+        <div class="pane">
+          <code class="syntax">entries(*args) #=> array</code>
+          <p><span class="highlight">From ruby-doc.org:</span> Returns an array containing the items in enum.</p>
+          <pre class="example"><code>(1..7).to_a <span class="comment">#=> [1, 2, 3, 4, 5, 6, 7]</span>
+{ 'a'=>1, 'b'=>2, 'c'=>3 }.to_a <span class="comment">#=> [["a", 1], ["b", 2], ["c", 3]]</span>
+
+require 'prime'
+Prime.entries 10 <span class="comment">#=> [2, 3, 5, 7]</span></code></pre>
+        </div>
+
+        <h3 id="find">find</h3>
+        <div class="pane">
+          <p><strong>Find</strong> performs the same operation as <strong>detect</strong>. <a href="#detect">view now</a></p>
+        </div>
+
+        <h3 id="find-all">find_all</h3>
+        <div class="pane">
+          <p><strong>Find_all</strong> performs the same operation as <strong>select</strong>. <a href="#select">view now</a></p>
+        </div>
+
+        <h3 id="find-index">find_index</h3>
+        <div class="pane">
+          <code class="syntax">find_index(value) #=> int or nil</code>
+          <code class="syntax">find_index { |obj| block } #=> int or nil</code>
+          <p>Compares each entry in the collection with <span class="fancier">value</span> or passes it to the block. Returns the index for the first item that returns true. If there is no match, returns nil.</p>
+          <pre class="example"><code>array = ["Nigel", "David", "Derek"]
+array.find_index("David") <span class="comment">#=> 1</span>
+
+(1..100).find_index { |i| i % 4 == 0 &amp;&amp; i % 22 == 0 } <span class="comment">#=> 43</span></code></pre>
+        </div>
+
+        <h3 id="first">first</h3>
+        <div class="pane">
+          <code class="syntax">first #=> obj or nil</code>
+          <code class="syntax">first(n) #=> an_array</code>
+          <p>Returns the first element or the first (n) elements in a collection. If the collection is empty, it returns nil.</p>
+          <pre class="example"><code>(6..25).first <span class="comment">#=> 6</span>
+
+array = ["Nigel", "David", "Derek"]
+array.first(2) <span class="comment">#=> ["Nigel", "David"]</span></code></pre>
+        </div>
+
+        <h3 id="flat-map">flat_map</h3>
+        <div class="pane">
+          <code class="syntax">flat_map { |obj| block } #=> array</code>
+          <p>Passes each element of the array to the block and returns an array with the concatenated results.</p>
+          <pre class="example"><code>array = [[1, 2, 3], [4, 5, 6], [7, [8, 9]]]
+array.flat_map { |i| i } <span class="comment">#=> [1, 2, 3, 4, 5, 6, 7, [8, 9]]</span></code></pre>
+        </div>
+
+        <h3 id="grep">grep</h3>
+        <div class="pane">
+          <code class="syntax">grep(pattern) #=> array</code>
+          <code class="syntax">grep(pattern) { |obj| block } #=> array</code>
+          <p>Returns an array with every object in the collection that matches the supplied pattern. Block is optional.</p>
+          <pre class="example"><code>array = [3, 88, 4, 39, 18, 99, 21]
+array.grep(Integer) { |n|
+  if n % 2 == 0
+    n * 2
+  else
+    n
+  end
+}
+<span class="comment">#=> [3, 176, 8, 39, 36, 99, 21]</span></code></pre>
+        </div>
+
+        <h3 id="grep-v">grep_v</h3>
+        <div class="pane">
+          <code class="syntax">grep_v(pattern) #=> array</code>
+          <code class="syntax">grep_v(pattern) { |obj| block } #=> array</code>
+          <p>This method is the opposite of <strong>grep</strong>. It returns the values that don't match the pattern.</p>
+          <pre class="example"><code>array = [3, 88, 4, 39, 18, 99, 21]
+array.grep_v(10..90) { |n| n * 2 }
+<span class="comment">#=> [6, 8, 198]</span></code></pre>
+        </div>
+
+        <h3 id="group-by">group_by</h3>
+        <div class="pane">
+          <code class="syntax">group_by { |obj| block } #=> a_hash</code>
+          <p>Returns a hash with the result of the block and corresponding values as key/value pairs.</p>
+          <pre class="example"><code>array = [3, 88, 4, 39, 18, 99, 21]
+array.group_by { |i| i &#60; 50 } <span class="comment">#=> {true=>[3, 4, 39, 18, 21], false=>[88, 99]}</span></code></pre>
+        </div>
+
+        <h3 id="include">include?</h3>
+        <div class="pane">
+          <code class="syntax">include?(obj) #=> true or false</code>
+          <p>Returns true if any element in the collection matches the argument.</p>
+          <pre class="example"><code>array = [3, 88, 4, 39, 18, 99, 21]
+array.include?(4) <span class="comment">#=> true</span></code></pre>
+        </div>
+
+        <h3 id="inject">inject</h3>
+        <div class="pane">
+          <code class="syntax">inject(initial, sym) #=> obj</code>
+          <code class="syntax">inject(sym) #=> obj</code>
+          <code class="syntax">inject(initial) { |memo, obj| block } #=> obj</code>
+          <code class="syntax">inject { |memo, obj| block } #=> obj</code>
+          <p><span class="highlight">From ruby-doc.org:</span> Combines all elements of enum by applying a binary operation, specified by a block or a symbol that names a method or operator.</p>
+          <p>If you specify a block, then for each element in enum the block is passed an accumulator value (memo) and the element. If you specify a symbol instead, then each element in the collection will be passed to the named method of memo. In either case, the result becomes the new value for memo. At the end of the iteration, the final value of memo is the return value for the method.</p>
+          <p>If you do not explicitly specify an initial value for memo, then the first element of collection is used as the initial value of memo.</p>
+          <pre class="example"><code><span class="comment"># Sum some numbers</span>
+(5..10).reduce(:+) <span class="comment">#=> 45</span>
+<span class="comment"># Same using a block and inject</span>
+(5..10).inject { |sum, n| sum + n } <span class="comment">#=> 45</span>
+<span class="comment"># Multiply some numbers</span>
+(5..10).reduce(1, :*) <span class="comment">#=> 151200</span>
+<span class="comment"># Same using a block</span>
+(5..10).inject(1) { |product, n| product * n } <span class="comment">#=> 151200</span>
+<span class="comment"># find the longest word</span>
+longest = %w{ cat sheep bear }.inject do |memo, word|
+   memo.length > word.length ? memo : word
+end
+longest <span class="comment">#=> "sheep"</span></code></pre>
+        </div>
+
+        <h3 id="lazy">lazy</h3>
+        <div class="pane">
+          <code class="syntax">lazy #=> lazy_enumerator</code>
+          <p><span class="highlight">From ruby-doc.org:</span> Returns a lazy enumerator, whose methods <strong>map/collect</strong>, <strong>flat_map/collect_concat</strong>, <strong>select/find_all</strong>, <strong>reject</strong>, <strong>grep</strong>, <strong>#grep_v</strong>, <strong>zip</strong>, <strong>take</strong>, <strong>#take_while</strong>, <strong>drop</strong>, and <strong>#drop_while</strong> enumerate values only on an as-needed basis. However, if a block is given to <strong>zip</strong>, values are enumerated immediately.</p>
+          <pre class="example"><code>def pythagorean_triples
+  (1..Float::INFINITY).lazy.flat_map {|z|
+    (1..z).flat_map {|x|
+      (x..z).select {|y|
+        x**2 + y**2 == z**2
+      }.map {|y|
+        [x, y, z]
+      }
+    }
+  }
+end
+<span class="comment"># show first ten pythagorean triples</span>
+p pythagorean_triples.take(10).force <span class="comment"># take is lazy, so force is needed</span>
+p pythagorean_triples.first(10) <span class="comment"># first is eager</span>
+<span class="comment"># show pythagorean triples less than 100</span>
+p pythagorean_triples.take_while { |*, z| z &#60; 100 }.force</code></pre>
+        </div>
+
+        <h3 id="map">map</h3>
+        <div class="pane">
+          <code class="syntax">map { |obj| block } #=> array</code>
+          <p><strong>Map</strong> is similar to <strong>each</strong> in that it iterates over each element of the collection passing them to the block. However, unlike <strong>each</strong>, <strong>map</strong> returns the results of the iteration.</p>
+          <pre class="example"><code>array = [3, 88, 4, 39, 18, 99, 21]
+array.map { |i| i * 2 } <span class="comment">#=> [6, 176, 8, 78, 36, 198, 42]</span></code></pre>
+        </div>
+
+        <h3 id="max">max</h3>
+        <div class="pane">
+          <code class="syntax">max #=> obj</code>
+          <code class="syntax">max { |a, b| block } #=> obj</code>
+          <code class="syntax">max(n) #=> obj</code>
+          <code class="syntax">max(n) { |a, b| block } #=> obj</code>
+          <p>Returns the object in the collection with the maximum value. If (n) is supplied, it returns (n) maximum values. Block is optional and returns a &#60;=> b. </p>
+          <pre class="example"><code><span class="comment"># returns an array containing the two highest odd numbers</span>
+array = [3, 88, 4, 39, 18, 99, 21]
+array.max(2) { |a, b|
+  if a % 2 == 0
+    array.delete(a)
+  end
+  a &#60;=> b
+  }
+<span class="comment">#=> [99, 39]</span></code></pre>
+        </div>
+
+        <h3 id="max-by">max_by</h3>
+        <div class="pane">
+          <code class="syntax">max_by { |obj| block } #=> obj</code>
+          <code class="syntax">max_by(n) { |obj| block } #=> obj</code>
+          <p>Returns the object with the maximum value when passed to the block. If (n) is supplied, it returns (n) maximum values.</p>
+          <pre class="example"><code>hash = { "dog" => {length: 40}, "cat" => {length: 20}, "snake" => {length: 100} }
+hash.max_by(2) { |key, value| hash[key][:length] }
+<span class="comment">#=> [["snake", {:length=>100}], ["dog", {:length=>40}]]</span></code></pre>
+        </div>
+
+        <h3 id="member">member?</h3>
+        <div class="pane">
+          <p><strong>Member?</strong> performs the same operation as <strong>include?</strong>. <a href="#include">view now</a></p>
+        </div>
+
+        <h3 id="min">min</h3>
+        <div class="pane">
+          <code class="syntax">min #=> obj</code>
+          <code class="syntax">min { |a, b| block } #=> obj</code>
+          <code class="syntax">min(n) #=> array</code>
+          <code class="syntax">min(n) { |a, b| block } #=> array</code>
+          <p>Returns the object in the collection with the minimum value. If (n) is supplied, it returns (n) maximum values. Block is optional and returns a &#60;=> b.</p>
+          <pre class="example"><code>array = [3, 88, 4, 39, 18, 99, 21]
+array.min(2) <span class="comment">#=> [3, 4]</span></code></pre>
+        </div>
+
+        <h3 id="min-by">min_by</h3>
+        <div class="pane">
+          <code class="syntax">min_by { |obj| block } #=> obj</code>
+          <code class="syntax">min_by(n) { |obj| block } #=> array</code>
+          <p>Returns the object with the minimum value when passed to the block. If (n) is supplied, it returns (n) minimum values.</p>
+          <pre class="example"><code>hash = { "dog" => {length: 40}, "cat" => {length: 20}, "snake" => {length: 100} }
+hash.min_by(2) { |key, value| hash[key][:length] }
+<span class="comment">#=> [["cat", {:length=>20}], ["dog", {:length=>40}]]</span></code></pre>
+        </div>
+
+        <h3 id="minmax">minmax</h3>
+        <div class="pane">
+          <code class="syntax">minmax #=> [min, max]</code>
+          <code class="syntax">minmax { |a, b| block } #=> [min, max]</code>
+          <p>Returns an array that contains the minimum and maximum values in the collection. Block is optional and returns a &#60;=> b.</p>
+          <pre class="example"><code>(1..100).minmax <span class="comment">#=> [1, 100]</span>
+
+herculoids = ["Zandor", "Tara", "Dorno", "Zok", "Igoo", "Tundro", "Gleep", "Gloop"]
+herculoids.minmax <span class="comment">#=> ["Dorno", "Zok"]</span></code></pre>
+        </div>
+
+        <h3 id="minmax-by">minmax_by</h3>
+        <div class="pane">
+          <code class="syntax">minmax_by { |obj| block } #=> [min, max]</code>
+          <p>Returns an array that contains the minimum and maximum values in the collection when passed to the block.</p>
+          <pre class="example"><code>herculoids = ["Zandor", "Tara", "Dorno", "Zok", "Igoo", "Tundro", "Gleep", "Gloop"]
+herculoids.minmax_by { |name| 0 - name.length } <span class="comment">#=> ["Zandor", "Zok"]</span></code></pre>
+        </div>
+
+        <h3 id="none">none?</h3>
+        <div class="pane">
+          <code class="syntax">none? { |obj| block } #=> true or false</code>
+          <p>Passes each element of the collection to the block. Returns true if the block never returns true for all elements. If the block is not given, <strong>none?</strong> will return true only if none of the collection members is true.</p>
+          <pre class="example"><code>herculoids = ["Zandor", "Tara", "Dorno", "Zok", "Igoo", "Tundro", "Gleep", "Gloop"]
+herculoids.none? { |name| name == "Thundarr"} <span class="comment">#=> true</span></code></pre>
+        </div>
+
+        <h3 id="one">one?</h3>
+        <div class="pane">
+          <code class="syntax">one? { |obj| block } #=> true or false</code>
+          <p>Passes each element of the collection to the block. Returns true if exactly one element returns true. If the block is not given, <strong>one?</strong> will return true only if exactly one of the collection members is true.</p>
+          <pre class="example"><code>herculoids = ["Zandor", "Tara", "Dorno", "Zok", "Igoo", "Tundro", "Gleep", "Gloop", "Thundarr", "Ookla", "Ariel"]
+herculoids.one? { |name| name == "Thundarr"} <span class="comment">#=> true</span></code></pre>
+        </div>
+
+        <h3 id="partition">partition</h3>
+        <div class="pane">
+          <code class="syntax">partition { |obj| block } #=> [true_array, false_array]</code>
+          <p>Returns two arrays inside of another array. The first one will contain the values that evaluate to true when passed to the block. The second will contain everything else.</p>
+          <pre class="example"><code>array = ["one", 2, 3, "four", "five", 6, "seven", 8, 9, 10]
+print array.partition { |obj| obj.is_a? Integer }
+<span class="comment">#=> [[2, 3, 6, 8, 9, 10], ["one", "four", "five", "seven"]]</span></code></pre>
+        </div>
+
+        <h3 id="reduce">reduce</h3>
+        <div class="pane">
+          <code class="syntax">reduce(initial, sym) #=> obj</code>
+          <code class="syntax">reduce(sym) #=> obj</code>
+          <code class="syntax">reduce(initial) { |memo, obj| block } #=> obj</code>
+          <code class="syntax">reduce { |memo, obj| block } #=> obj</code>
+          <p><span class="highlight">From ruby-doc.org:</span> Combines all elements of enum by applying a binary operation, specified by a block or a symbol that names a method or operator.</p>
+          <p>If you specify a block, then for each element in enum the block is passed an accumulator value (memo) and the element. If you specify a symbol instead, then each element in the collection will be passed to the named method of memo. In either case, the result becomes the new value for memo. At the end of the iteration, the final value of memo is the return value for the method.</p>
+          <p>If you do not explicitly specify an initial value for memo, then the first element of collection is used as the initial value of memo.</p>
+          <pre class="example"><code><span class="comment"># Sum some numbers</span>
+(5..10).reduce(:+) #=> 45
+<span class="comment"># Same using a block and inject</span>
+(5..10).inject { |sum, n| sum + n } #=> 45
+<span class="comment"># Multiply some numbers</span>
+(5..10).reduce(1, :*) <span class="comment">#=> 151200</span>
+<span class="comment"># Same using a block</span>
+(5..10).inject(1) { |product, n| product * n } <span class="comment">#=> 151200</span>
+<span class="comment"># find the longest word</span>
+longest = %w{ cat sheep bear }.inject do |memo, word|
+   memo.length > word.length ? memo : word
+end
+longest <span class="comment">#=> "sheep"</span></code></pre>
+        </div>
+
+        <h3 id="reject">reject</h3>
+        <div class="pane">
+          <code class="syntax">reject { |obj| block } #=> array</code>
+          <p>Returns an array of all elements in the collection for which the block returns false.</p>
+          <pre class="example"><code>array = ["one", 2, 3, "four", "five", 6, "seven", 8, 9, 10]
+print array.reject { |ele| ele.is_a? String }
+<span class="comment">#=> [2, 3, 6, 8, 9, 10]</span></code></pre>
+        </div>
+
+        <h3 id="reverse-each">reverse_each</h3>
+        <div class="pane">
+          <code class="syntax">reverse_each(*args) { |item| block } #=> enum</code>
+          <p>Builds a temporary array and traverses that array in reverse order.</p>
+          <pre class="example"><code>array = ["one", 2, 3, "four", "five", 6, "seven", 8, 9, 10]
+array.reverse_each { |ele| puts ele }
+<span class="comment">#=>
+10
+9
+8
+seven
+6
+five
+four
+3
+2
+one</code></pre>
+        </div>
+
+        <h3 id="select">select</h3>
+        <div class="pane">
+          <code class="syntax">select { |obj| block } #=> array</code>
+          <p>Returns an array containing all elements of the collection for which the block returns a true value.</p>
+          <pre class="example"><code>array = ["one", 2, 3, "four", "five", 6, "seven", 8, 9, 10]
+array.select { |ele| ele.is_a? Integer }
+<span class="comment">#=> [2, 3, 6, 8, 9, 10]</span></code></pre>
+        </div>
+
+        <h3 id="slice-after">slice_after</h3>
+        <div class="pane">
+          <code class="syntax">slice_after(pattern) #=> an_enumerator</code>
+          <code class="syntax">slice_after { |elt| bool } #=> an_enumerator</code>
+          <p><span class="highlight">From ruby-doc.org:</span> Creates an enumerator for each chunked elements. The ends of chunks are defined by pattern and the block.</p>
+          <p>If pattern === elt returns true or the block returns true for the element, the element is end of a chunk.</p>
+          <p>The === and block is called from the first element to the last element of enum.</p>
+          <p>The result enumerator yields the chunked elements as an array. So each method can be called as follows:</p>
+          <code class="syntax">enum.slice_after(pattern).each { |ary| ... }</code>
+          <code class="syntax">enum.slice_after { |elt| bool }.each { |ary| ... }</code>
+          <p>Other methods of the Enumerator class and Enumerable module, such as map, etc., are also usable.</p>
+
+          <p>For example, continuation lines (lines end with backslash) can be concatenated as follows:</p>
+          <pre class="example"><code>lines = ["foo\n", "bar\\\n", "baz\n", "\n", "qux\n"]
+e = lines.slice_after(/(?&#60;!\)\n\z/)
+p e.to_a
+<span class="comment">#=> [["foo\n"], ["bar\\\n", "baz\n"], ["\n"], ["qux\n"]]</span>
+p e.map {|ll| ll[0...-1].map {|l| l.sub(/\\n\z/, "") }.join + ll.last }
+<span class="comment">#=>["foo\n", "barbaz\n", "\n", "qux\n"]</span></code></pre>
+        </div>
+
+        <h3 id="slice-before">slice_before</h3>
+        <div class="pane">
+          <code class="syntax">slice_before(pattern) #=> an_enumerator</code>
+          <code class="syntax">slice_before { |elt| bool } #=> an_enumerator</code>
+          <p><span class="highlight">From ruby-doc.org:</span> Creates an enumerator for each chunked elements. The beginnings of chunks are defined by pattern and the block.</p>
+          <p>If pattern === elt returns true or the block returns true for the element, the element is beginning of a chunk.</p>
+          <p>The === and block is called from the first element to the last element of enum. The result for the first element is ignored.</p>
+          <p>The result enumerator yields the chunked elements as an array. So each method can be called as follows:</p>
+          <code class="syntax">enum.slice_before(pattern).each { |ary| ... }</code>
+          <code class="syntax">enum.slice_before { |elt| bool }.each { |ary| ... }</code>
+          <p>Other methods of the Enumerator class and Enumerable module, such as map, etc., are also usable.</p>
+          <p>For example, iteration over ChangeLog entries can be implemented as follows:</p>
+          <pre class="example"><code><span class="comment"># iterate over ChangeLog entries.</span>
+open("ChangeLog") { |f|
+  f.slice_before(/\A\S/).each { |e| pp e }
+}
+
+<span class="comment"># same as above. Block is used instead of pattern argument.</span>
+open("ChangeLog") { |f|
+  f.slice_before { |line| /\A\S/ === line }.each { |e| pp e }
+}</code></pre>
+        </div>
+
+        <h3 id="slice-when">slice_when</h3>
+        <div class="pane">
+          <code class="syntax">slice_when {|elt_before, elt_after| bool } #=> an_enumerator</code>
+          <p><span class="highlight">From ruby-doc.org:</span> Creates an enumerator for each chunked elements. The beginnings of chunks are defined by the block.</p>
+
+          <p>This method split each chunk using adjacent elements, elt_before and elt_after, in the receiver enumerator. This method split chunks between elt_before and elt_after where the block returns true.</p>
+
+          <p>The block is called the length of the receiver enumerator minus one.</p>
+
+          <p>The result enumerator yields the chunked elements as an array. So each method can be called as follows:</p>
+
+          <code class="syntax">enum.slice_when { |elt_before, elt_after| bool }.each { |ary| ... }</code>
+          <p>Other methods of the Enumerator class and Enumerable module, such as to_a, map, etc., are also usable.</p>
+
+          <p>For example, one-by-one increasing subsequence can be chunked as follows:</p>
+          <pre class="example"><code>a = [1,2,4,9,10,11,12,15,16,19,20,21]
+b = a.slice_when {|i, j| i+1 != j }
+p b.to_a <span class="comment">#=> [[1, 2], [4], [9, 10, 11, 12], [15, 16], [19, 20, 21]]</span>
+c = b.map {|a| a.length &#60; 3 ? a : "#{a.first}-#{a.last}" }
+p c <span class="comment">#=> [[1, 2], [4], "9-12", [15, 16], "19-21"]</span>
+d = c.join(",")
+p d <span class="comment">#=> "1,2,4,9-12,15,16,19-21"</span></code></pre>
+        </div>
+
+        <h3 id="sort">sort</h3>
+        <div class="pane">
+          <code class="syntax">sort #=> array</code>
+          <code class="syntax">sort { |a, b| block } #=> array</code>
+          <p><span class="highlight">From ruby-doc.org:</span> Returns an array containing the items in enum sorted, either according to their own &#60;=> method, or by using the results of the supplied block. The block should return -1, 0, or +1 depending on the comparison between a and b. As of Ruby 1.8, the method Enumerable#sort_by implements a built-in Schwartzian Transform, useful when key computation or comparison is expensive.</p>
+          <pre class="example"><code>%w(rhea kea flea).sort <span class="comment">#=> ["flea", "kea", "rhea"]</span>
+(1..10).sort { |a, b| b &#60;=> a } <span class="comment">#=> [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]</span></code></pre>
+        </div>
+
+        <h3 id="sort-by">sort_by</h3>
+        <div class="pane">
+          <code class="syntax">sort_by { |obj| block } #=> array</code>
+          <p><span class="highlight">From ruby-doc.org:</span> Sorts enum using a set of keys generated by mapping the values in enum through the given block.</p>
+
+          <p>If no block is given, an enumerator is returned instead.</p>
+          <pre class="example"><code>%w{apple pear fig}.sort_by { |word| word.length}
+<span class="comment">#=> ["fig", "pear", "apple"]</span></code></pre>
+        </div>
+
+        <h3 id="take">take</h3>
+        <div class="pane">
+          <code class="syntax">take(n) #=> array</code>
+          <p>Returns the first (n) elements from the collection.</p>
+          <pre class="example"><code>array = ["one", 2, 3, "four", "five", 6, "seven", 8, 9, 10]
+array.take(4) <span class="comment">#=> ["one", 2, 3, "four"]</span></code></pre>
+        </div>
+
+        <h3 id="take-while">take_while</h3>
+        <div class="pane">
+          <code class="syntax">take_while { |arr| block } #=> array</code>
+          <p>Passes elements to the block until the block returns nil or false, then stops iterating and returns an array of all prior elements.</p>
+          <pre class="example"><code>(1..10).take_while { |i| i <= 6 }
+<span class="comment">#=> [1, 2, 3, 4, 5, 6]</span></code></pre>
+        </div>
+
+        <h3 id="to-h">to_h</h3>
+        <div class="pane">
+          <code class="syntax">to_h(*args) #=> hash</code>
+          <p>Returns the result of interpreting the collection as a list of [key, value] pairs.</p>
+          <pre class="example"><code>couples = ["Jane", "Tarzan", "Mr. Carson", "Mrs. Hughes", "Baby", "Johnny", "Harry", "Sally", "Scarlett", "Rhett"]
+couples.each_with_index.to_h
+<span class="comment">#=> {"Jane"=>0, "Tarzan"=>1, "Mr. Carson"=>2, "Mrs. Hughes"=>3, "Baby"=>4, "Johnny"=>5, "Harry"=>6, "Sally"=>7, "Scarlett"=>8, "Rhett"=>9}</span></code></pre>
+        </div>
+
+        <h3 id="zip">zip</h3>
+        <div class="pane">
+          <code class="syntax">zip(arg, ...) #=> an_array_of_array</code>
+          <code class="syntax">zip(arg, ...) { |arr| block } #=> nil</code>
+          <p><span class="highlight">From ruby-doc.org:</span> Takes one element from enum and merges corresponding elements from each args. This generates a sequence of n-element arrays, where n is one more than the count of arguments. The length of the resulting sequence will be enum#size. If the size of any argument is less than enum#size, nil values are supplied. If a block is given, it is invoked for each output array, otherwise an array of arrays is returned.</p>
+          <pre class="example"><code>a = [ 4, 5, 6 ]
+b = [ 7, 8, 9 ]
+
+a.zip(b) <span class="comment">#=> [[4, 7], [5, 8], [6, 9]]</span>
+[1, 2, 3].zip(a, b) <span class="comment">#=> [[1, 4, 7], [2, 5, 8], [3, 6, 9]]</span>
+[1, 2].zip(a, b) <span class="comment">#=> [[1, 4, 7], [2, 5, 8]]</span>
+a.zip([1, 2], [8]) <span class="comment">#=> [[4, 1, 8], [5, 2, nil], [6, nil, nil]]</span>
+
+c = []
+a.zip(b) { |x, y| c &#60;&#60; x + y } <span class="comment">#=> nil</span>
+c <span class="comment">#=> [11, 13, 15]</span></code></pre>
+        </div>
+      </section>
+      <div>
+    </main>
+  </div>
+  <a href="#" class="scrollup"></a>
+</body>
+</html>
