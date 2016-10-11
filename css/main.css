@@ -75,7 +75,7 @@ h1, h2, h3, h4, h5, h6 {
  * Links
  */
 a {
-  color: #F23B24;
+  color: #00B4CC;
   text-decoration: none; }
 /*  a:visited {
     color: #B2B1B0; }*/
@@ -145,6 +145,13 @@ pre {
       padding-left: 15px; } }
 
 /* Container to keep footer at the bottom of the page */
+.site-logo {
+  height: 35px;
+  float: left;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
 .container {
   min-height: 100%;
   position: relative;

@@ -8,7 +8,7 @@
 # Site settings
 title: 'jason_milfred(design, develop)'
 subtitle:
-email: your-email@domain.com
+email: j@milfred.com
 description:
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://milfred.github.io" # the base hostname & protocol for your site
